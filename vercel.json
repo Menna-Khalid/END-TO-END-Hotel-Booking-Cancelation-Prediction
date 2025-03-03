@@ -5,8 +5,12 @@
       "src": "main.py",
       "use": "@vercel/python",
       "config": {
-        "maxLambdaSize": "15mb",
-        "includeFiles": ["templates/**", "static/**", "Hotel_Booking_Cancellation_Prediction_Model.pkl"]
+        "maxLambdaSize": "50mb",
+        "includeFiles": [
+          "templates/**",
+          "static/**",
+          "Hotel_Booking_Cancellation_Prediction_Model.pkl"
+        ]
       }
     }
   ],
