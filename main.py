@@ -123,6 +123,4 @@ def index():
         prediction = "Not Canceled" if pred[0] == 1 else "Canceled"
     return render_template("index.html", prediction=prediction)
 
-
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, debug=True)
+handler = app.wsgi_app
