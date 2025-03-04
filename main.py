@@ -123,4 +123,10 @@ def index():
         prediction = "Not Canceled" if pred[0] == 1 else "Canceled"
     return render_template("index.html", prediction=prediction)
 
+'''
+if want to use Vecel for Deployment use:
 handler = app.wsgi_app
+and don't use the last 2 lines
+'''
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000, debug=True)
