@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hotel Booking Cancellation Prediction</title>
+  <style>
+    /* Full-page background using the hotel image */
+    body {
+      margin: 0;
+      padding: 0;
+      background: url("{{ url_for('static', filename='Hotel_photo_cleanup.jpg') }}") no-repeat center center fixed;
+      background-size: cover; /* Ensures the image covers the entire screen */
+      font-family: Arial, sans-serif;
+    }
+
+    /* More transparent container */
+    .container {
+      width: 80%;
+      max-width: 1200px;
+      margin: 50px auto;
+      background-color: rgba(255, 255, 255, 0.4); /* Increased transparency */
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #4a148c; /* Deep purple text */
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .column {
+      flex: 0 0 48%; /* Two columns side by side */
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #4a148c;
+    }
+
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .button-group {
+      width: 100%;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .submit-btn {
+      background-color: #9c27b0; /* Medium purple for the button */
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 0 10px;
+    }
+
+    .submit-btn:hover {
+      background-color: #7b1fa2; /* Darker purple on hover */
+    }
+
+    .prediction {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 18px;
+      color: #4a148c;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Hotel Booking Cancellation Prediction</h1>
+    <form method="POST">
+      <!-- Left Column (8 fields) -->
+      <div class="column">
+        <div class="form-group">
+          <label for="number_of_adults">Number of Adults</label>
+          <input type="text" id="number_of_adults" name="number_of_adults"
+                 value="{{ request.form.get('number_of_adults', '') }}" required>
+        </div>
+        <div class="form-group">
+          <label for="number_of_children">Number of Children</label>
+          <input type="text" id="number_of_children" name="number_of_children"
+                 value="{{ request.form.get('number_of_children', '') }}" required>
+        </div>
+        <div class="form-group">
+          <label for="number_of_weekend_nights">Number of Weekend Nights</label>
+          <input type="text" id="number_of_weekend_nights" name="number_of_weekend_nights"
+                 value="{{ request.form.get('number_of_weekend_nights', '') }}" required>
+        </div>
+        <div class="form-group">
+          <label for="number_of_week_nights">Number of Week Nights</label>
+          <input type="text" id="number_of_week_nights" name="number_of_week_nights"
+                 value="{{ request.form.get('number_of_week_nights', '') }}" required>
+        </div>
+        <div class="form-group">
+          <label for="car_parking_space">Car Parking Space</label>
+          <input type="text" id="car_parking_space" name="car_parking_space"
+                 value="{{ request.form.get('car_parking_space', '') }}" required>
+        </div>
+        <div class="form-group">
+          <label for="lead_time">Lead Time</label>
+          <input type="text" id="lead_time" name="lead_time"
+                 value="{{ request.form.get('lead_time', '') }}" required>
+        </div>
+        <div class="form-group">
+          <label for="repeated">Repeated</label>
+          <input type="text" id="repeated" name="repeated"
+                 value="{{ request.form.get('repeated', '') }}" required>
+        </div>
+        <div class="form-group">
+          <label for="P_C">P-C</label>
+          <input type="text" id="P_C" name="P_C"
+                 value="{{ request.form.get('P_C', '') }}" required>
+        </div>
+      </div>
+
+      <!-- Right Column (8 fields) -->
+      <div class="column">
+        <div class="form-group">
+          <label for="P_not_C">P-not-C</label>
+          <input type="text" id="P_not_C" name="P_not_C"
+                 value="{{ request.form.get('P_not_C', '') }}" required>
+        </div>
+        <div class="form-group">
+          <label for="average_price">Average Price</label>
+          <input type="text" id="average_price" name="average_price"
+                 value="{{ request.form.get('average_price', '') }}" required>
+        </div>
+        <div class="form-group">
+          <label for="special_requests">Special Requests</label>
+          <input type="text" id="special_requests" name="special_requests"
+                 value="{{ request.form.get('special_requests', '') }}" required>
+        </div>
+        <div class="form-group">
+          <label for="reservation_year">Reservation Year</label>
+          <input type="text" id="reservation_year" name="reservation_year"
+                 value="{{ request.form.get('reservation_year', '') }}" required>
+        </div>
+        <div class="form-group">
+          <label for="reservation_month">Reservation Month</label>
+          <input type="text" id="reservation_month" name="reservation_month"
+                 value="{{ request.form.get('reservation_month', '') }}" required>
+        </div>
+        <div class="form-group">
+          <label for="type_of_meal">Type of Meal</label>
+          <select id="type_of_meal" name="type_of_meal" required>
+            <option value="">-- Select --</option>
+            <option value="Meal Plan 2" {% if request.form.get('type_of_meal') == 'Meal Plan 2' %}selected{% endif %}>Meal Plan 2</option>
+            <option value="Meal Plan 3" {% if request.form.get('type_of_meal') == 'Meal Plan 3' %}selected{% endif %}>Meal Plan 3</option>
+            <option value="Not Selected" {% if request.form.get('type_of_meal') == 'Not Selected' %}selected{% endif %}>Not Selected</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="room_type">Room Type</label>
+          <select id="room_type" name="room_type" required>
+            <option value="">-- Select --</option>
+            <option value="Room_Type 2" {% if request.form.get('room_type') == 'Room_Type 2' %}selected{% endif %}>Room_Type 2</option>
+            <option value="Room_Type 3" {% if request.form.get('room_type') == 'Room_Type 3' %}selected{% endif %}>Room_Type 3</option>
+            <option value="Room_Type 4" {% if request.form.get('room_type') == 'Room_Type 4' %}selected{% endif %}>Room_Type 4</option>
+            <option value="Room_Type 5" {% if request.form.get('room_type') == 'Room_Type 5' %}selected{% endif %}>Room_Type 5</option>
+            <option value="Room_Type 6" {% if request.form.get('room_type') == 'Room_Type 6' %}selected{% endif %}>Room_Type 6</option>
+            <option value="Room_Type 7" {% if request.form.get('room_type') == 'Room_Type 7' %}selected{% endif %}>Room_Type 7</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="market_segment_type">Market Segment Type</label>
+          <select id="market_segment_type" name="market_segment_type" required>
+            <option value="">-- Select --</option>
+            <option value="Complementary" {% if request.form.get('market_segment_type') == 'Complementary' %}selected{% endif %}>Complementary</option>
+            <option value="Corporate" {% if request.form.get('market_segment_type') == 'Corporate' %}selected{% endif %}>Corporate</option>
+            <option value="Offline" {% if request.form.get('market_segment_type') == 'Offline' %}selected{% endif %}>Offline</option>
+            <option value="Online" {% if request.form.get('market_segment_type') == 'Online' %}selected{% endif %}>Online</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <!-- Get Prediction Button -->
+        <button type="submit" class="submit-btn" name="action" value="predict">Get Prediction</button>
+        <!-- New Prediction Button -->
+        <button type="submit" class="submit-btn" name="action" value="new_prediction">New Prediction</button>
+      </div>
+    </form>
+
+    <!-- Display prediction result if available -->
+    {% if prediction %}
+    <div class="prediction">
+      <p>Prediction: <strong>{{ prediction }}</strong></p>
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>
